@@ -13,8 +13,8 @@
 #include <set>
 #include <string>
 #include <unordered_set>
-
-std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
+#include <sstream>
+std::string kYourName = "Crystal Rodgers"; // Don't forget to change this!
 
 /**
  * Takes in a file name and returns a set containing all of the applicant names as a set.
@@ -29,6 +29,21 @@ std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
  */
 std::set<std::string> get_applicants(std::string filename) {
   // STUDENT TODO: Implement this function.
+  std::set<std::string> applicants;
+  std::ifstream file;
+  file.open(filename);
+  if (!file.is_open()) {
+    std::cerr << "Error opening file: " << filename << std::endl;
+    return applicants; // Return empty set if file cannot be opened
+  }
+  std::string name;
+  while (std::getline(file, name)) {
+    if (!name.empty()) { // Check if the line is not empty
+      applicants.insert(name);
+    }
+  }
+  file.close();
+  return applicants;
 }
 
 /**
@@ -41,6 +56,20 @@ std::set<std::string> get_applicants(std::string filename) {
  */
 std::queue<const std::string*> find_matches(std::string name, std::set<std::string>& students) {
   // STUDENT TODO: Implement this function.
+  std::queue<const std::string*> matches;
+  std::stringstream ss(name);
+  std::string first, last;
+  ss>>first >> last; // Split the name into first and last parts
+  for(auto& student : students) {
+    // Check if the initials match
+    std::stringstream it(student);
+    std::string student_first, student_last;
+    it >> student_first >> student_last; // Split the student's name
+    if (student_first[0] == first[0] && student_last[0] == last[0]) {
+      matches.push(&student); // Push a pointer to the matching student name
+    }
+  }
+  return matches;
 }
 
 /**
@@ -55,6 +84,12 @@ std::queue<const std::string*> find_matches(std::string name, std::set<std::stri
  */
 std::string get_match(std::queue<const std::string*>& matches) {
   // STUDENT TODO: Implement this function.
+  if (matches.empty()) {
+    return "NO MATCHES FOUND."; // Return this if there are no matches
+  }
+  // For simplicity, let's just return the first match in the queue
+  const std::string* match = matches.front();
+  return *match; // Return the match as a string
 }
 
 /* #### Please don't remove this line! #### */
