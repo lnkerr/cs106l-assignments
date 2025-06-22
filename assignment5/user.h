@@ -19,7 +19,14 @@ public:
    * STUDENT TODO:
    * Your custom operators and special member functions will go here!
    */
-
+  friend std::ostream& operator<<(std::ostream& out,User& user);
+  ~User();
+  User(const User& other);
+  User& operator=(const User& other);
+  User(User&& other) = delete;
+  User& operator=(User&& other) = delete;
+  User& operator+=(User& other);
+  bool operator<(const User& other)const;
 private:
   std::string _name;
   std::string* _friends;
